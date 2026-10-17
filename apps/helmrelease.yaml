@@ -1,0 +1,26 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nginx-flux-dev
+  namespace: flux-dev
+spec:
+  interval: 5m
+  releaseName: nginx-flux-dev
+  targetNamespace: flux-dev
+  storageNamespace: flux-system
+  chart:
+    spec:
+      chart: ./apps/nginx
+      version: "0.1.0"
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+      reconcileStrategy: Revision
+  install:
+    createNamespace: true
+  values:
+    replicaCount: 1
+    image:
+      repository: nginx
+      tag: "1.26.3"
